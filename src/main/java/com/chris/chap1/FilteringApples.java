@@ -21,7 +21,7 @@ public class FilteringApples {
                 new Apple(120, "red")
         );
 
-        // 对inventory中的苹果按照重量进行排序, 注: 通过Alt + Enter可以自动切换到lambda表达式.
+        // to sort a list of apples in inventory based on their weight, remark: "Alt + Enter" makes the code to the lambda expression.
         Collections.sort(inventory, new Comparator<Apple>() {
             @Override
             public int compare(Apple o1, Apple o2) {
