@@ -33,6 +33,8 @@ public class FilteringApples {
         System.out.println(inventory.toString());
     }
 
+
+
     public static class Apple {
         private int weight = 0;
         private String color = "";
