@@ -1,11 +1,10 @@
 package com.chris.chap1;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Predicate;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 /**
  * This is description.
@@ -28,16 +27,79 @@ public class FilteringApples {
                 return o1.getWeight() - o2.getWeight();
             }
         });
+        // [Apple{weight=80, color='green'}, Apple{weight=120, color='red'}, Apple{weight=155, color='green'}]
         System.out.println(inventory.toString());
+
         inventory.sort(comparing(Apple::getWeight));
+        // [Apple{weight=80, color='green'}, Apple{weight=120, color='red'}, Apple{weight=155, color='green'}]
         System.out.println(inventory.toString());
+
+        List<Apple> greenApples = filterApples(inventory, Apple::isGreenApple);
+        // [Apple{weight=80, color='green'}, Apple{weight=155, color='green'}]
+        System.out.println(greenApples);
+        List<Apple> heavyApples = filterApples(inventory, Apple::isHeavyApple);
+        // [Apple{weight=155, color='green'}]
+        System.out.println(heavyApples);
+        System.out.println("------------------------");
+        System.out.println(filterApples(inventory, (Apple a) -> a.getWeight() > 150));
+        System.out.println(filterApples(inventory, (Apple a) -> "red".equals(a.getColor())));
+        System.out.println(filterApples(inventory, (Apple a) -> a.getWeight() < 150 && "green".equals(a.getColor())));
+        System.out.println("------------------------");
+        // Sequential processing
+        List<Apple> heavyApples2 = inventory.stream()
+                .filter((Apple a) -> a.getWeight() > 150)
+                .collect(toList());
+        System.out.println(heavyApples2);
+
+        // Parallel processing
+        List<Apple> heavyApples3 = inventory.parallelStream()
+                .filter((Apple a) -> a.getWeight() > 150)
+                .collect(toList());
+        System.out.println(heavyApples3);
     }
 
+    public static List<Apple> filterGreenApples(List<Apple> inventory) {
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if ("green".equals(apple.getColor())) {
+                result.add(apple);
+            }
+        }
+        return result;
+    }
 
+    public static List<Apple> filterHeavyApples(List<Apple> inventory) {
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if (apple.getWeight() > 150) {
+                result.add(apple);
+            }
+        }
+        return result;
+    }
+
+    public static List<Apple> filterApples(List<Apple> inventory, Predicate<Apple> p) {
+        List<Apple> result = new ArrayList<>();
+        for (Apple apple : inventory) {
+            if (p.test(apple)) {
+                result.add(apple);
+            }
+        }
+        return result;
+    }
 
     public static class Apple {
+
         private int weight = 0;
         private String color = "";
+
+        public static boolean isGreenApple(Apple apple) {
+            return "green".equals(apple.getColor());
+        }
+
+        public static boolean isHeavyApple(Apple apple) {
+            return apple.getWeight() > 150;
+        }
 
         @Override
         public String toString() {
