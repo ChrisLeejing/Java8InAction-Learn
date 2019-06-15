@@ -18,14 +18,49 @@ public class FilteringApples {
                 new Apple(155, "red"),
                 new Apple(120, "red")
         );
+        // Fourth attempt: filtering by abstract criteria
         // [Apple{weight=80, color='green'}, Apple{weight=155, color='green'}]
         System.out.println(filterApplesByColor(inventory, "green"));
         // [Apple{weight=155, color='red'}, Apple{weight=120, color='red'}]
         System.out.println(filterApplesByColor(inventory, "red"));
         // [Apple{weight=155, color='red'}]
         System.out.println(filterApples(inventory, new AppleRedAndHeavyPredicate()));
+
+        // Fifth attempt: using an anonymous class
+        // [Apple{weight=155, color='red'}, Apple{weight=120, color='red'}]
+        List<Apple> redApples = filterApples(inventory, new ApplePredicate() {
+            @Override
+            public boolean test(Apple apple) {
+                return "red".equals(apple.getColor());
+            }
+        });
+        System.out.println(redApples);
+
+        // Sixth attempt: using a lambda expression
+        List<Apple> redApples2 = filterApples(inventory, (Apple apple) -> "red".equals(apple.getColor()));
+        System.out.println(redApples2);
+
+
+
     }
 
+    /**
+     * Seventh attempt: abstracting over List type
+     * @param <T>
+     */
+    public interface Predicate<T> {
+        boolean test(T t);
+    }
+
+    public static <T> List<T> filter(List<T> list, Predicate<T> predicate) {
+        List<T> result = new ArrayList<>();
+        for (T t : list) {
+            if (predicate.test(t)) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
 
     public static List<Apple> filterGreenApples(List<Apple> inventory) {
         List<Apple> result = new ArrayList<>();
