@@ -104,8 +104,46 @@ public class Lambda {
         List<Apple> redAndHeavyOrGreenApples = filter(inventory, redAndHeavyOrGreenPredicate);
         System.out.println(redAndHeavyOrGreenApples);
 
+        // Composing Functions: andThen(), compose
+        Function<Integer, Integer> f = x -> x + 1;
+        Function<Integer, Integer> g = x -> x * 2;
+        Function<Integer, Integer> h = f.andThen(g);
+        // andThen() means g(f(x))
+        Integer result = h.apply(1);
+        // result: 4
+        System.out.println("result: " + result);
+
+        Function<Integer, Integer> f2 = x -> x + 1;
+        Function<Integer, Integer> g2 = x -> x * 2;
+        Function<Integer, Integer> h2 = f2.compose(g2);
+        // compose() means f(g(x))
+        Integer result2 = h2.apply(1);
+        // result2: 3
+        System.out.println("result2: " + result2);
+
     }
 
+    static class Letter {
+        public static String addHeader(String text) {
+            return "From Chris: " + text;
+        }
+
+        public static String addFooter(String text) {
+            return text + " Kind regards";
+        }
+
+        public static String checkSpelling(String text) {
+            return text.replaceAll("labda", "lambda");
+        }
+
+        public static void main(String[] args){
+            Function<String, String> addHeader = Letter::addHeader;
+            // pipeline 1: addHeader -> checkSpelling -> addFooter
+            Function<String, String> transformationPipeline1 = addHeader.andThen(Letter::checkSpelling).andThen(Letter::addFooter);
+            // pipeline 2: addHeader -> addFooter
+            Function<String, String> transformationPipeline2 = addHeader.andThen(Letter::addHeader);
+        }
+    }
     public static <T, R> List<R> map(List<T> list, Function<T, R> function) {
         List<R> result = new ArrayList<>();
         for (T t : list) {
