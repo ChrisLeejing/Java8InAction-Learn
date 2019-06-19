@@ -1,10 +1,10 @@
-package com.chris.chap4;
+package com.chris.chap5;
 
 /**
  * This is description.
  *
  * @author Chris Lee
- * @date 2019/6/17 10:29
+ * @date 2019/6/19 20:58
  */
 public class Dish {
     private final String name;
@@ -41,18 +41,5 @@ public class Dish {
     }
 
     public enum Type { MEAT, FISH, OTHER }
-    public enum Type1 { MEAT, FISH, OTHER }
 
-    public static void main(String[] args) {
-        System.out.println(Type.MEAT.equals(Type1.MEAT));
-        System.out.println(Type.MEAT.equals(Type.MEAT));
-        System.out.println(Type.MEAT==Type.MEAT);
-        // System.out.println(Type.MEAT==Type1.MEAT);
-        /*
-        false
-        true
-        true
-        Operator '==' cannot be applied to 'com.chris.chap4.Dish.Type', 'com.chris.chap4.Dish.Type1'
-         */
-    }
 }
