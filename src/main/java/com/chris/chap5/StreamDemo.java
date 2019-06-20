@@ -133,30 +133,30 @@ public class StreamDemo {
         // 3. How would you extend the previous example to return only pairs whose sum is divisible by 3?
         // For example, (2, 4) and (3, 3) are valid.
         // method 1:
-        List<int[]> numberPairs3 = list1.stream()
+        List<int[]> numberPairs2 = list1.stream()
                 .flatMap(i -> list2.stream()
                         .filter(j -> (i + j) % 3 == 0)
                         .map(j -> new int[]{i, j}))
                 .collect(toList());
 
-        List<String> pairs3 = new ArrayList<>();
-        for (int[] numberPair : numberPairs3) {
-            pairs3.add("(" + numberPair[0] + ", " + numberPair[1] + ")");
+        List<String> pairs2 = new ArrayList<>();
+        for (int[] numberPair : numberPairs2) {
+            pairs2.add("(" + numberPair[0] + ", " + numberPair[1] + ")");
         }
-        System.out.println("pairs3: " + pairs3);
+        System.out.println("pairs3: " + pairs2);
 
         // method 2:
-        List<int[]> numberPairs2 = list1.stream()
+        List<int[]> numberPairs3 = list1.stream()
                 .flatMap(i -> list2.stream()
                         .map(j -> new int[]{i, j}))
                 .collect(toList());
 
-        List<String> pairs2 = new ArrayList<>();
-        for (int[] numberPair : numberPairs2) {
+        List<String> pairs3 = new ArrayList<>();
+        for (int[] numberPair : numberPairs3) {
             if ((numberPair[0] + numberPair[1]) % 3 == 0) {
-                pairs2.add("(" + numberPair[0] + ", " + numberPair[1] + ")");
+                pairs3.add("(" + numberPair[0] + ", " + numberPair[1] + ")");
             }
         }
-        System.out.println("pairs2: " + pairs2);
+        System.out.println("pairs2: " + pairs3);
     }
 }
