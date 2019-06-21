@@ -3,6 +3,7 @@ package com.chris.chap5;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -143,7 +144,7 @@ public class StreamDemo {
         for (int[] numberPair : numberPairs2) {
             pairs2.add("(" + numberPair[0] + ", " + numberPair[1] + ")");
         }
-        System.out.println("pairs3: " + pairs2);
+        System.out.println("pairs2: " + pairs2);
 
         // method 2:
         List<int[]> numberPairs3 = list1.stream()
@@ -157,6 +158,30 @@ public class StreamDemo {
                 pairs3.add("(" + numberPair[0] + ", " + numberPair[1] + ")");
             }
         }
-        System.out.println("pairs2: " + pairs3);
+        System.out.println("pairs3: " + pairs3);
+
+        // 5.3. Finding and matching
+        // 5.3.1. Checking to see if a predicate matches at least one element
+        if (menu.stream().anyMatch(Dish::isVegetarian)) {
+            System.out.println("The menu is (somewhat) vegetarian friendly!");
+        }
+
+        // 5.3.2. Checking to see if a predicate matches all elements
+        boolean isHealthy = menu.stream().allMatch(dish -> dish.getCalories() < 1000);
+        boolean isHealthy2 = menu.stream().noneMatch(dish -> dish.getCalories() >= 1000);
+
+        // 5.3.3. Finding an element
+        Optional<Dish> dish = menu.stream().filter(Dish::isVegetarian).findAny();
+        menu.stream().filter(Dish::isVegetarian).findAny().ifPresent(d -> System.out.println(d.getName()));
+
+        // 5.3.4. Finding the first element
+        // For example, the code that follows, given a list of numbers,
+        // finds the first square that’s divisible by 3:
+        List<Integer> integers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        integers.stream()
+                .map(x -> x * x)
+                .filter(x -> x % 3 == 0)
+                .findFirst()
+                .ifPresent(System.out::println);
     }
 }
