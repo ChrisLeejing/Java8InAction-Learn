@@ -1,0 +1,6 @@
+This is
+a test.txt file
+hello world
+hello java
+hello spring cloud
+Java 8 in Action.
