@@ -4,6 +4,7 @@ import com.chris.chap5.Dish;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Comparator.comparingInt;
 import static java.util.stream.Collectors.*;
@@ -49,6 +50,7 @@ public class CollectorsDemo {
 
         // 6.1. Collectors in a nutshell
         List<Transaction> transactionList = transactions.stream().collect(Collectors.toList());
+        System.out.println("-----------------------------------------------");
         // 6.2. Reducing and summarizing
         Long howManyDishes = menu.stream().collect(Collectors.counting());
         long howManyDishes2 = menu.stream().count();
@@ -91,7 +93,7 @@ public class CollectorsDemo {
                         .collect(groupingBy(Dish::getType,
                                 maxBy(comparingInt(Dish::getCalories))));
         System.out.println("mostCaloricByType: " + mostCaloricByType);
-
+        System.out.println("-----------------------------------------------");
         // 6.3. Grouping
         Map<Dish.Type, List<Dish>> dishesByType = menu.stream().collect(groupingBy(Dish::getType));
         System.out.println("dishesByType: " + dishesByType);
@@ -151,9 +153,47 @@ public class CollectorsDemo {
             }
         }, toCollection(HashSet::new))));
         System.out.println("caloricByTypeHashSet: " + caloricByTypeHashSet);
+        System.out.println("-----------------------------------------------");
+        // 6.4. Partitioning
+        Map<Boolean, List<Dish>> partitionMenu = menu.stream().collect(partitioningBy(Dish::isVegetarian));
+        System.out.println("partitionMenu: " + partitionMenu);
+        List<Dish> vegetarianDishes = partitionMenu.get(true);
+        System.out.println("vegetarianDishes: " + vegetarianDishes);
+        List<Dish> meatDishes = partitionMenu.get(false);
+        System.out.println("meatDishes: " + meatDishes);
+
+        List<Dish> vegetarianDishes2 = menu.stream().filter(Dish::isVegetarian).collect(toList());
+        System.out.println("vegetarianDishes2: " + vegetarianDishes2);
+
+        Map<Boolean, Map<Dish.Type, List<Dish>>> vegetarianDishesByType = menu.stream().collect(partitioningBy(Dish::isVegetarian, groupingBy(Dish::getType)));
+        System.out.println("vegetarianDishesByType: " + vegetarianDishesByType);
+
+        Map<Boolean, Dish> mostCaloricPartitionedByVegetarian = menu.stream().collect(partitioningBy(Dish::isVegetarian, collectingAndThen(maxBy(comparingInt(Dish::getCalories)), Optional::get)));
+        System.out.println("mostCaloricPartitionedByVegetarian: " + mostCaloricPartitionedByVegetarian);
+
+        // 6.4.2. Partitioning numbers into prime and nonprime
+        CollectorsDemo collectorsDemo = new CollectorsDemo();
+        Map<Boolean, List<Integer>> partitionPrimes = collectorsDemo.partitionPrimes(100);
+        System.out.println("partitionPrimes: " + partitionPrimes);
     }
 
-// Trader and Transaction are classes defined as follows:
+    /**
+     * 6.4.2. Partitioning numbers into prime and nonprime
+     */
+    public boolean isPrime(int candidate) {
+        return IntStream.range(2, candidate).noneMatch(i -> candidate % i == 0);
+    }
+
+    public boolean isPrime2(int candidate) {
+        int candidateRoot = (int) Math.sqrt((double) candidate);
+        return IntStream.rangeClosed(2, candidateRoot).noneMatch(i -> candidate % i == 0);
+    }
+
+    public Map<Boolean, List<Integer>> partitionPrimes(int n) {
+        return IntStream.rangeClosed(2, n).boxed().collect(partitioningBy(candidate -> isPrime2(candidate)));
+    }
+
+    // Trader and Transaction are classes defined as follows:
 
     static class Trader {
         private final String name;
@@ -209,5 +249,5 @@ public class CollectorsDemo {
         }
     }
 
-    public enum CaloricLevel { DIET, NORMAL, FAT }
+    public enum CaloricLevel {DIET, NORMAL, FAT}
 }
